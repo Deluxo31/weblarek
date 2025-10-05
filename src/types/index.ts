@@ -14,8 +14,17 @@ export interface IProduct {
   price: number | null;
 }
 export interface IBuyer {
-    payment: 'card' | 'cash' | '';
+    payment: 'card' | 'cash' | '' | string;
     address: string;
     email: string;
     phone: string
+}
+
+export interface IOrder {
+    payment: 'card' | 'cash' | '' | string,
+    email: string,
+    phone: string,
+    address: string,
+    total: number,
+    items: string[]
 }

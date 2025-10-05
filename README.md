@@ -128,5 +128,93 @@ interface IBuyer {
     phone: string // Номер телефона покупателя
 }
 ```
+#### IOrder
+
+Интерфейс для объекта, отправляемого на сервер при оформлении заказ
+```typescript 
+export interface IOrder {
+    payment: 'card' | 'cash' | '' | string,
+    email: string,
+    phone: string,
+    address: string,
+    total: number,
+    items: string[]
+}
+```
 
 ## Модели данных
+
+#### Класс Catalog
+Catalog. Хранит массив всех товаров.
+Хранит товар, выбранный для подробного отображения.
+
+Поля класса:
+
+```typescript
+products: IProduct[]
+selectedProduct: IProduct | null = null;
+```
+
+Методы класса:
+```typescript
+setProducts(products: IProduct[]) // сохранение массива товаров полученного в параметрах метода;
+getProducts() // получение массива товаров из модели
+getProductById(id: string) // получение одного товара по его id
+setSelectedProduct(product: IProduct) //сохранение товара для подробного отображения
+getSelectedProduct() //получение товара для подробного отображения
+```
+
+#### Класс ShoppingCart
+ShoppingCart. Хранит массив товаров, выбранных покупателем для покупки.
+
+Поля класса:
+```typescript
+productsSelectedForPurchase: IProduct[]
+```
+
+Методы класса:
+```typescript
+getProductsSelectedForPurchase () //получение массива товаров, которые находятся в корзине
+addProduct(product: IProduct) // добавление товара, который был получен в параметре, в массив корзины
+removeProduct(product: IProduct) // удаление товара
+clearShoppingCart() // очистка корзины
+getTotalPrice() // получение стоимости всех товаров в корзине
+getTotalCountProductsInShoppingCart () // получение количества товаров в корзине
+checkingProductInShoppingCart(id: string) // проверка наличия товара в корзине по его id, полученного в параметр метода.
+```
+#### Класс Buyer
+Buyer. Хранит вид оплаты, адрес, email, телефон.
+
+Поля класса:
+```typescript
+data: IBuyer = {
+    payment: "",
+    address: "",
+    email: "",
+    phone:""
+   }
+```
+
+Методы класса:
+```typescript
+saveData(data: Partial<IBuyer>) // сохранение данных в модели с возможностью сохранить только одно значение
+getDataBuyer() //получение всех данных покупателя
+clearDataBuyer() // очистка данных покупателя
+validate() // валидация данных, поле является валидным, если оно не пустое
+```
+
+## Слой коммуникации
+
+#### Класс ApiWeblarek
+
+Этот класс будет использовать композицию, чтобы выполнить запрос на сервер с помощью метода get класса Api и будет получать с сервера объект с массивом товаров.
+
+Поля класса:
+```typescript
+api: IApi 
+```
+Методы класса:
+```typescript
+async getProductList() // делает get запрос на эндпоинт /product/ и возвращает массив товаров
+async createOrder(order: IOrder) // делает post запрос на эндпоинт /order/ и передаёт в него данные, полученные в параметрах метода
+```
