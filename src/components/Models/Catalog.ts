@@ -2,7 +2,7 @@ import { IProduct } from "../../types";
 
 
 export class Catalog {
-     private products: IProduct[] = [];
+      products: IProduct[] = [];
      private selectedProduct: IProduct | null = null;
 
      constructor(){

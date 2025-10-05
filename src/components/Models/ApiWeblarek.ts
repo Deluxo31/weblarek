@@ -1,18 +1,16 @@
-import { IApi, IProduct, IOrder} from "../../types"
+import { IProduct, IOrder} from "../../types"
 import { API_URL } from "../../utils/constants"
 import { Api } from "../base/Api"
 
-export class apiWeblarek {
-
-   api: IApi 
+export class ApiWeblarek extends Api {
 
 constructor (){
-    this.api = new Api(API_URL)
+   super(API_URL)
 }
 
 async getProductList(){
     try{
-    const response = await this.api.get<{ total: number, items: IProduct[]}>('/product/')
+    const response = await this.get<{ total: number, items: IProduct[]}>('/product/')
     return response
     } catch (error) {
         console.error('Ошибка:', error);
@@ -21,7 +19,7 @@ async getProductList(){
 } 
 
 async createOrder(order: IOrder) {
-    await this.api.post('/order/', order)
+    await this.post('/order/', order)
 }
 
 }
