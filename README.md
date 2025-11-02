@@ -214,3 +214,192 @@ validate() // валидация данных, поле является вал�
 async getProductList() // делает get запрос на эндпоинт /product/ и возвращает массив товаров
 async createOrder(order: IOrder) // делает post запрос на эндпоинт /order/ и передаёт в него данные, полученные в параметрах метода
 ```
+## Слой представления
+### Архитектура компонентов представления
+
+Компоненты представления организованы в строгой иерархии с четким разделением ответственности:
+
+### Классы отвечающие за свой блок разметки компоненты UI
+
+#### Класс Heder - шапка приложения с корзиной
+
+Поля класса
+```typescript
+basketButton: HTMLButtonElement // Корзина
+counterElement: HTMLElement //счетчик товаров в корзине
+```
+ Методы класса
+ ```typescript
+ set counter(value: number) // сеттер счетчика товаров в корзине
+```
+
+#### Класс Gallery - отображения товаров
+
+Поля класса
+```typescript
+galleryElement: HTMLElement // область отоброжения товаров
+```
+Методы
+```typescript
+set catalog(items: HTMLElement[]) // добавление карточек
+```
+#### Класс Basket - корзина
+Поля класса
+```typescript
+buttonElement: HTMLButtonElement // кнопка оформления заказа
+priceElement: HTMLElement // общая стоимость товаров в корзине
+listElement: HTMLElement // список товаров в корзине
+```
+Методы
+```typescript
+set list(list: HTMLElement[]) // сеттер добавления товаров в корзину
+set price(price: number) // сеттер общей стоимости товаров
+set button(active: boolean) // сеттер отвечает за состояние кнопки (активирована или деактивирована )
+```
+#### Класс Success - успешное оформление заказа
+Поля класса
+```typescript
+buttonElement: HTMLButtonElement // кнопка с успешним оформлением
+priceElement: HTMLElement // на какую сумму был оформлен заказ
+```
+Методы
+```typescript
+set price(price: number) // сеттер общей суммы заказа
+```
+### Переиспользуемые сущности 
+### Abstract Класс Form 
+```typescript
+abstract class  Form<T> extends Component<T & IForm>
+```
+ Поля класса
+```typescript
+protected buttonElement: HTMLButtonElement // кнопка оформления
+protected errors: HTMLElement // ошибки при валидации
+```
+Методы
+```typescript
+ set error(value: string | string[]) // сеттер ошибок
+ set valid(isValid: boolean) // сеттер отвечает за состояние кнопки (активирована или деактивирована )
+```
+#### Класс FormOrder наследуется от Form
+```typescript 
+class FormOrder extends Form<IFormOrder>
+```
+Поля класса
+```typescript
+cardPaymentButton: HTMLButtonElement // кнопка оплаты картой
+cashPaymentButton: HTMLButtonElement // кнопка оплаты наличными
+addressInputElement: HTMLInputElement // поле ввода адреса
+```
+Методы
+```typescript
+private resetPaymentButtons(): void // метод для сброса состояния кнопок
+private setPaymentMethod(method: 'card' | 'cash'): void // общий метод для установки способа оплаты
+ set address(value: string) // сеттер для адреса
+```
+#### Класс FormContact наследуется от Form
+```typescript 
+class ContactForm extends Form<IContactsForm>
+```
+Поля класса
+```typescript
+emailInputElement: HTMLInputElement // поле ввода Email
+phoneInputElement: HTMLInputElement // поле ввода номера телефона
+```
+Методы
+```typescript
+set email(value: string) // сеттер email
+set phone(value: string) // сеттер телефона
+```
+### Abstract Класс Card
+```typescript 
+abstract class Card<T> extends Component<ICard & T>
+```
+Поля класса
+```typescript
+titleElement: HTMLElement // название товара
+priceElement: HTMLElement // цена товара
+```
+Методы
+```typescript
+set title(name: string) // сеттер названия
+set price(price: number | null) // сеттер цены
+```
+#### Класс CardBasket наследуется от Card
+```typescript 
+class CardBasket extends Card<ICardBasket>
+```
+Поля класса
+```typescript
+indexElement: HTMLElement // id товара
+buttonElement: HTMLButtonElement // кнопка удаления товара из корзины 
+```
+Методы
+```typescript
+set index(value: number) // сеттер индекса
+```
+#### Класс CardCatalog наследуется от Card
+```typescript 
+class CardBasket extends Card<ICardBasket>
+```
+Поля класса
+```typescript
+indexElement: HTMLElement // id товара
+buttonElement: HTMLButtonElement // кнопка удаления товара из корзины 
+```
+Методы
+```typescript
+set index(value: number) // сеттер индекса
+```
+#### Класс CardCPreview наследуется от Card
+```typescript 
+class class CardPreview extends Card<ICardPreview>
+```
+Поля класса
+```typescript
+imageElement: HTMLImageElement // картинка товара
+categoryElement: HTMLElement // категоря товара
+buttonElement:HTMLButtonElement // кнопка добавления товара в корзину
+descriptionElement: HTMLElement // описание товара
+```
+Методы
+```typescript
+set image(value: string) // сеттер картинки
+set category(value: string) // сеттер категории товара
+set description(value: string) //  сеттер описания товара
+set buttonText(value: string) // сеттер текста кнопки
+```
+## Событийная модель
+### События, генерируемые в приложении
+#### От Моделей данных:
+ ```typescript
+catalog:changed //  изменение каталога товаров - данные: { products: IProduct[] }
+product:selected // выбор товара для просмотра - данные: { product: IProduct }
+cart:changed // изменение содержимого корзины - данные: { items: IProduct[], total: number, count: number }
+buyer:changed // изменение данных покупателя - данные: { data: IBuyer }
+```
+#### От Представлений:
+```typescript
+card:select // выбор карточки для просмотра
+product:preview // действие с товаром в предпросмотре
+basket:open // открытие корзины
+order:open //  открытие формы заказа
+form:changed // изменение данных в форме заказа
+contacts:open //  переход к форме контактов
+contacts:changed // изменение данных в форме контактов
+order:submit // отправка заказа
+modal:close // закрытие модального окна
+```
+
+## Слой Presenter (Презентер)
+### Реализация в main.ts
+Презентер реализован как набор обработчиков событий в основном файле приложения, что соответствует требованиям задания.
+**Инициализация приложения**:
+```typescript
+// Создание брокера событий, API и моделей
+const events = new EventEmitter();
+const api = new ApiWeblarek();
+const catalog = new Catalog(events);
+const cart = new ShoppingCart(events);
+const buyer = new Buyer(events);
+```

@@ -1,4 +1,5 @@
 import { IBuyer } from "../../types";
+import { IEvents } from "../base/Events";
 
 export class Buyer {
    private data: IBuyer = {
@@ -7,14 +8,16 @@ export class Buyer {
     email: "",
     phone:""
    }
+   private event: IEvents;
 
 
-   constructor(){
-
-   }
+   constructor(event: IEvents) {
+        this.event = event;
+    }
 
    saveData(data: Partial<IBuyer>): void{
       this.data = {...this.data, ...data}
+      this.event.emit('buyer:changed', { data: this.data });
    }
 
    getDataBuyer() : IBuyer {
@@ -28,6 +31,7 @@ export class Buyer {
     email: "",
     phone:""
    }
+   this.event.emit('buyer:changed', { data: this.data });
    }
 
    validate(): Partial<IBuyer> {

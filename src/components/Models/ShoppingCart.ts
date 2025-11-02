@@ -1,10 +1,12 @@
 import { IProduct } from "../../types";
+import { IEvents } from "../base/Events";
 
 export class ShoppingCart {
     private productsSelectedForPurchase: IProduct[] = [];
-
-    constructor() {
-
+    private event: IEvents;
+    
+    constructor(event: IEvents) {
+        this.event = event;
     }
 
     getProductsSelectedForPurchase (): IProduct[] {
@@ -13,6 +15,11 @@ export class ShoppingCart {
 
     addProduct(product: IProduct):void {
         this.productsSelectedForPurchase.push(product);
+        this.event.emit('card:changed', { 
+            items: this.productsSelectedForPurchase,
+            total: this.getTotalPrice(),
+            count: this.getTotalCountProductsInShoppingCart()
+        });
     }
 
     removeProduct(product: IProduct): void {
@@ -21,10 +28,20 @@ export class ShoppingCart {
         if (indexProductForRemove !== -1) {
             this.productsSelectedForPurchase.splice(indexProductForRemove, 1);
         }
+        this.event.emit('card:changed', { 
+                items: this.productsSelectedForPurchase,
+                total: this.getTotalPrice(),
+                count: this.getTotalCountProductsInShoppingCart()
+            });
     }
 
     clearShoppingCart(): void{
         this.productsSelectedForPurchase = [];
+        this.event.emit('card:changed', { 
+            items: this.productsSelectedForPurchase,
+            total: this.getTotalPrice(),
+            count: this.getTotalCountProductsInShoppingCart()
+        });
     }
     
     getTotalPrice(): number{
