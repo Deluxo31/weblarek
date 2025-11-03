@@ -14,6 +14,7 @@ interface ICardPreview {
     category: string
     description: string
     buttonText:  string
+    buttonDisabled?: boolean;
 }
 
 export class CardPreview extends Card<ICardPreview> {
@@ -53,12 +54,11 @@ export class CardPreview extends Card<ICardPreview> {
     }    
 
     set buttonText(value: string) {
-        if (value === 'Недоступно') {
-        this.buttonElement.disabled = true;
-    } else {
-        this.buttonElement.disabled = false;
-    }
     this.buttonElement.textContent = value;
 }
+
+    set buttonDisabled(value: boolean) {
+        this.buttonElement.disabled = value;
+    }
 
 }

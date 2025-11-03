@@ -30,19 +30,19 @@ export class CardCatalog  extends Card<ICardCatalog>{
         
     }
         set image(value: string) {
-        this.setImage(this.imageElement, value, this.title)
+            this.setImage(this.imageElement, value, this.title)
            }
 
         set category(value: string) {
-        this.categoryElement.textContent = value
-         Object.values(categoryMap).forEach(className => {
+            this.categoryElement.textContent = value
+            Object.values(categoryMap).forEach(className => {
             this.categoryElement.classList.remove(className);
         });
         
         // Добавляем нужный класс
         const categoryClass = categoryMap[value as categoryKey];
-        if (categoryClass) {
-            this.categoryElement.classList.add(categoryClass);
+              if (categoryClass) {
+                this.categoryElement.classList.add(categoryClass);
         }
     }
         

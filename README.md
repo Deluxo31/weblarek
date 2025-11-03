@@ -290,12 +290,13 @@ class FormOrder extends Form<IFormOrder>
 cardPaymentButton: HTMLButtonElement // кнопка оплаты картой
 cashPaymentButton: HTMLButtonElement // кнопка оплаты наличными
 addressInputElement: HTMLInputElement // поле ввода адреса
-```
+``` 
 Методы
 ```typescript
 private resetPaymentButtons(): void // метод для сброса состояния кнопок
 private setPaymentMethod(method: 'card' | 'cash'): void // общий метод для установки способа оплаты
- set address(value: string) // сеттер для адреса
+set address(value: string) // сеттер для адреса
+set payment(value: string) // сеттер обновляет визуальное состояние кнопок выбора способа оплаты в форме
 ```
 #### Класс FormContact наследуется от Form
 ```typescript 
@@ -368,6 +369,7 @@ set image(value: string) // сеттер картинки
 set category(value: string) // сеттер категории товара
 set description(value: string) //  сеттер описания товара
 set buttonText(value: string) // сеттер текста кнопки
+set buttonDisabled(isDisabled: boolean) // сеттер состояния кнопки
 ```
 ## Событийная модель
 ### События, генерируемые в приложении
@@ -381,7 +383,7 @@ buyer:changed // изменение данных покупателя - данн
 #### От Представлений:
 ```typescript
 card:select // выбор карточки для просмотра
-product:preview // действие с товаром в предпросмотре
+product:selected // действие с товаром в предпросмотре
 basket:open // открытие корзины
 order:open //  открытие формы заказа
 form:changed // изменение данных в форме заказа

@@ -24,14 +24,12 @@ export class FormOrder extends Form<IFormOrder> {
         // Обработчики клика по кнопкам оплаты
         if (this.cardPaymentButton) {
             this.cardPaymentButton.addEventListener('click', () => {
-                this.setPaymentMethod('card');
                 events.emit('form:changed', { payment: 'card' })
             })
         }
         
         if (this.cashPaymentButton) {
             this.cashPaymentButton.addEventListener('click', () => {
-                this.setPaymentMethod('cash');
                 events.emit('form:changed', { payment: 'cash'})
             })
         }
@@ -66,10 +64,10 @@ export class FormOrder extends Form<IFormOrder> {
 
     // Сеттер для способа оплаты
     set payment(value: string) {
-        if (value === 'card' || value === 'cash') {
-            this.setPaymentMethod(value);
-        }
-    }
+  if (value === 'card' || value === 'cash') {
+    this.setPaymentMethod(value);
+  }
+}
 
     // Сеттер для адреса
     set address(value: string) {

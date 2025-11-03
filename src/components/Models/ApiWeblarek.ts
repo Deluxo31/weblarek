@@ -18,8 +18,8 @@ async getProductList(){
     }
 } 
 
-async createOrder(order: IOrder) {
-    await this.post('/order/', order)
+async createOrder(order: IOrder): Promise<{ total: number }> {
+  return await this.post<{ total: number }>('/order/', order);
 }
 
 }
